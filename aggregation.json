@@ -1,0 +1,13 @@
+db.accounts.aggregate([{ $sort: { balance: -1 } }, { $limit: 5 }]);
+
+db.customers.aggregate([
+  { $unwind: "$accounts" },
+  {
+    $group: {
+      _id: "$_id",
+      username: { $first: "$username" },
+      totalAccounts: { $sum: 1 }
+    }
+  },
+  { $sort: { totalAccounts: -1 } }
+])
